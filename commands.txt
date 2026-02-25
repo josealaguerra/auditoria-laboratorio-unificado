@@ -1,0 +1,48 @@
+
+
+# Identificar los contenedores que se estan ejecutando
+docker ps
+-- CONTAINER ID   IMAGE                                     COMMAND                  CREATED        STATUS                 PORTS                                     NAMES
+-- 8b18b74c41e5   auditoria-laboratorio-unificado-kali      "/usr/sbin/sshd -D"      12 hours ago   Up 2 hours                                                       kali-tools
+-- 4f026bb96de1   auditoria-laboratorio-unificado-php-app   "docker-php-entrypoi…"   12 hours ago   Up 2 hours             0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   php-app
+-- 610f1606d2b5   mysql:5.7.44                              "docker-entrypoint.s…"   12 hours ago   Up 2 hours (healthy)   3306/tcp, 33060/tcp                       mysql-db
+-- a23551bf8281   kalilinux/kali-rolling                    "/bin/bash"              6 days ago     Up 2 hours                                                       mi-kali
+
+
+# Copiar un archivo dentro del contenedor de mysql
+docker cp C:\git\auditoria-laboratorio-unificado\bd.sql 610f1606d2b5:/home/elias/
+
+# Ejecutar el archivo en una base de datos
+docker exec -i mysql-db mysql -u ferreteria_usr -p"lab_pass_123" sistema_ferreteria -e "source /home/elias/bd.sql"
+
+insert into usuarios (nombre, usuario, password, perfil, estado) values ('jag', 'jag', 'jag', 'admin', '1');
+
+insert into usuarios (nombre, usuario, password, perfil, estado) values ('hat', 'hat', 'hat', 'admin', '1');
+update usuarios set perfil='Administrador' where perfil='admin';
+insert into usuarios (nombre, usuario, password, perfil, estado) values ('ven', 'ven', 'ven', 'Vendedor', '1');
+insert into usuarios (nombre, usuario, password, perfil, estado) values ('esp', 'esp', 'esp', 'Especial', '1');
+
+
+
+
+rm -rf /var/www/html/* \
+    && cd /tmp/ \
+    && git clone https://github.com/alexbob17/Proyecto-Sistema-Pos-Ferreteria-U2020.git \ 
+    && mv /tmp/Proyecto-Sistema-Pos-Ferreteria-U2020/* /var/www/html/ \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+
+
+
+rm -rf /var/www/html/*
+cd /tmp/
+git clone https://github.com/alexbob17/Proyecto-Sistema-Pos-Ferreteria-U2020.git
+
+
+mv /tmp/Proyecto-Sistema-Pos-Ferreteria-U2020/* /var/www/html/
+
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
+
