@@ -15,7 +15,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 # Limpiar directorio web por defecto y clonar el código legacy
 RUN rm -rf /var/www/html/* \
-    && git clone https://github.com/andrespaucar/sistemaferreteria.git /var/www/html/
+    && git clone https://github.com/alexbob17/Proyecto-Sistema-Pos-Ferreteria-U2020.git /var/www/html/
 
 
 # RUN rm -rf /var/www/html/* \
@@ -23,7 +23,7 @@ RUN rm -rf /var/www/html/* \
 
 
 # Copiar script de prueba de conexión a base de datos
-COPY test-db.php /var/www/html/test-db.php
+# COPY test-db.php /var/www/html/test-db.php
 
 # Ajustar permisos para Apache
 RUN chown -R www-data:www-data /var/www/html \
