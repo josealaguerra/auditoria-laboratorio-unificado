@@ -1,32 +1,35 @@
-FROM php:7.4-apache
+# ETAPA 1: Builder (para descargar el código)
+FROM alpine:latest AS builder
+RUN apk add --no-cache git
+WORKDIR /app
+RUN git clone https://github.com/alexbob17/Proyecto-Sistema-Pos-Ferreteria-U2020.git .
 
-# Instalar dependencias del SO para las extensiones de PHP y clonar el repo
-RUN apt-get update && apt-get install -y \
+# ETAPA 2: Runtime (Imagen final ligera)
+# Nota: Cambiamos a Alpine. Alpine usa 'apk' en lugar de 'apt-get'
+FROM php:7.4-apache AS runtime 
+# (Si tu app permite usar fpm+nginx, alpine sería aún más pequeño, 
+# pero mantendremos apache por compatibilidad con tu código legacy)
+
+# Instalamos dependencias y extensiones en pasos separados para debug
+RUN apt-get update --allow-releaseinfo-change
+RUN apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libonig-dev \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    libonig-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd mysqli pdo pdo_mysql mbstring
+RUN rm -rf /var/lib/apt/lists/*
 
-# Configurar e instalar extensiones PHP legacy (gd, mysqli, pdo_mysql, mbstring)
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql mbstring
+# Copiamos solo el código desde la etapa builder
+COPY --from=builder /app /var/www/html/
+COPY test-db.php /var/www/html/test-db.php
 
-# Limpiar directorio web por defecto y clonar el código legacy
-RUN rm -rf /var/www/html/* \
-    && git clone https://github.com/alexbob17/Proyecto-Sistema-Pos-Ferreteria-U2020.git /var/www/html/
-
-
-# RUN rm -rf /var/www/html/* \
-#     && git clone https://github.com/alexbob17/Proyecto-Sistema-Pos-Ferreteria-U2020.git /var/www/html/
-
-
-# Copiar script de prueba de conexión a base de datos
-# COPY test-db.php /var/www/html/test-db.php
-
-# Ajustar permisos para Apache
+# Permisos mínimos necesarios
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
+
+RUN a2enmod rewrite
+# RUN service apache2 restart
 
 EXPOSE 80

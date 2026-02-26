@@ -85,6 +85,50 @@ services:
         ipv4_address: 172.20.0.13
     restart: unless-stopped
 
+  nessus:
+    image: tenable/nessus:latest-ubuntu
+    container_name: nessus-scanner
+    hostname: nessus.ferreteria.local
+    ports:
+      - "8834:8834"
+    networks:
+      ferreteria-lab-net:
+        ipv4_address: 172.20.0.14
+    restart: unless-stopped
+
+  openvas:
+    image: immauss/openvas:latest
+    container_name: openvas-scanner
+    hostname: openvas.ferreteria.local
+    ports:
+      - "9392:9392"
+    networks:
+      ferreteria-lab-net:
+        ipv4_address: 172.20.0.15
+    restart: unless-stopped
+
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: zap-scanner
+    hostname: zap.ferreteria.local
+    ports:
+      - "8082:8080"
+    networks:
+      ferreteria-lab-net:
+        ipv4_address: 172.20.0.16
+    restart: unless-stopped
+
+  burp:
+    image: hexcowboy/burpsuite:latest
+    container_name: burp-suite
+    hostname: burp.ferreteria.local
+    ports:
+      - "8081:8080"
+    networks:
+      ferreteria-lab-net:
+        ipv4_address: 172.20.0.17
+    restart: unless-stopped
+
 
 
 networks:
