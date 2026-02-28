@@ -37,6 +37,21 @@ Este entorno provisiona un laboratorio aislado con PHP 7.4 y MySQL 5.7 para audi
    ```
    Deberías ver los 3 servicios en estado "healthy" o "up".
 
+## 🔧 Configuración adicional para herramientas GUI
+
+- **Burp Suite (burp-suite):** Para acceder a la interfaz gráfica, instala [VcXsrv](https://sourceforge.net/projects/vcxsrv/) en tu máquina local. Configura VcXsrv para permitir conexiones desde cualquier host. En el archivo `docker-compose.yml`, la variable `DISPLAY` está configurada como `host.docker.internal:0.0`, pero si no funciona, reemplázala con la IP de tu laptop local (ej: `DISPLAY=192.168.1.100:0.0`). Asegúrate de que VcXsrv esté ejecutándose antes de iniciar el contenedor.
+
+## 📋 Servicios incluidos
+
+- **php-app:** Aplicación web en PHP 7.4 obsoleto, simulando un sistema de ferretería vulnerable para pruebas de seguridad.
+- **db:** Base de datos MySQL 5.7 obsoleta, almacenando datos del sistema de ferretería.
+- **kali:** Contenedor con Kali Linux, equipado con herramientas de pentesting para auditorías de seguridad.
+- **windows-xp:** Máquina virtual Windows XP como objetivo vulnerable, para simular ataques a sistemas legacy.
+- **nessus:** Escáner de vulnerabilidades Nessus, para identificar debilidades en la red y aplicaciones.
+- **openvas:** Escáner de vulnerabilidades OpenVAS (fork de Nessus), alternativo para detección de vulnerabilidades.
+- **zap:** OWASP ZAP, proxy para interceptar y manipular tráfico web durante pruebas de seguridad.
+- **burp:** Burp Suite, herramienta para interceptar, analizar y manipular tráfico HTTP/S en aplicaciones web.
+
 ## ✅ Validación
 
 1. **Conexión PHP → MySQL:**
