@@ -101,7 +101,7 @@ services:
     container_name: openvas-scanner
     hostname: openvas.ferreteria.local
     ports:
-      - "9392:9392"
+      - "9392:443"
     networks:
       ferreteria-lab-net:
         ipv4_address: 172.20.0.15
